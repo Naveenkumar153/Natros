@@ -27,17 +27,16 @@ exports.getTours = async (req, res) => {
 };
 
 exports.createTour = async (req, res) => {
-
   try {
     const tour = await toursModel.create(req.body)
-     res.send(201).json({
+     res.status(201).json({
       status: 'success',
       data:{
         tour:tour
       }
     });
   } catch (error) {
-    await  res.send(400).json({
+    res.status(400).json({
       status: 'fail',
       message:error
     });
