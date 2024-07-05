@@ -13,7 +13,7 @@ const tours = new mongoose.Schema({
     description:{ type:String, trim:true, },
     imageCover:{ type:String, required:true },
     images:[String],
-    createdAt:{ type:Date, default:Date.now() },
+    createdAt:{ type:Date, default:Date.now(), select:false },
     startDates: [Date]
 });
 
