@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const path = require('path');
-const app = require('./app');
 const envFileName = `.env.${process.env.NODE_ENV}`;
 const envFilePath = path.join(__dirname, '..', envFileName);
 
 dotenv.config({ path: envFilePath });
 
+const app = require('./app');
 const connectDB = async () => {
   try {
     mongoose.set("strictQuery", true);
