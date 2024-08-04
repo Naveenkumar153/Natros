@@ -12,7 +12,10 @@ const tourValidation = require('../../controllers/tours/tours.validation');
 
 tourRouter.route('/')
    .get(tourController.getTours)
-   .post(tourController.createTour)
+   .post(tourController.createTour);
+
+tourRouter.route('/tours-stats').get(tourController.getTourStats);
+tourRouter.route('/monthly-plan/:year').get(tourController.getMonthlyPlan);
 
 tourRouter.route('/:id')
    .get(tourController.getTourById)
