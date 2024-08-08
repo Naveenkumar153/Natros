@@ -77,6 +77,17 @@ tours.post('save',function(doc,next) {
     next();
 });
 
+// QUERY middelware: runs before .find() and .findOne()
+tours.pre(/^find/,function(next) {
+    this.find({ securetTour: { $ne: true } });
+    this.startDates = Date.now();
+    next();
+});
+
+tours.post(/^find/,function(docs,next) {
+    console.log(`Query took ${Date.now() - this.startDates } milliseconds`);
+    next();
+});
 
 
 module.exports =  mongoose.model('Tours', tours);
