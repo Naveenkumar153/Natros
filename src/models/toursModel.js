@@ -90,4 +90,10 @@ tours.post(/^find/,function(docs,next) {
 });
 
 
+// AGGREGATION middelware
+tours.pre('aggregate',function(next) {
+    this.pipeline().unshift({ $match:{ securetTour: { $ne: true } } });
+    next();
+});
+
 module.exports =  mongoose.model('Tours', tours);
