@@ -12,12 +12,24 @@ if(process.env.NODE_ENV === 'development'){
     app.use(morgan('tiny'));
 }
 
+// application middlewares
+
 app.use(express.json());
 app.use(express.static(`${__dirname}/public`));
+
+// application routes
 
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 
+
+// if no route is found
+app.all('**', function(req, res) {
+    res.status(404).json({
+        status: 'fail',
+        message: `Can't find on this route: ${req.originalUrl}`
+    });
+});
 
 
 module.exports = app;
