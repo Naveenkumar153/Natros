@@ -62,4 +62,21 @@ tours.virtual('roundPrice').get(function() {
     return parseFloat(this.price).toFixed(2);
 });
 
+// DOCUMENT MIDDLEWARE: runs before .save() and .create()
+tours.pre('save',function(next) {
+    console.log('save pre',this);
+    console.log(slugify(this.name,{ lower:true }));
+    next();
+});
+tours.pre('save',function(next) {
+    console.log('save pre 2',this);
+    next();
+});
+
+tours.post('save',function(doc,next) {
+    next();
+});
+
+
+
 module.exports =  mongoose.model('Tours', tours);
