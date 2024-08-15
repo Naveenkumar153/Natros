@@ -1,15 +1,16 @@
-
-const express = require('express');
+const express = require("express");
 const app = express();
-const morgan = require('morgan');
+const morgan = require("morgan");
 
-const tourRouter = require('./routes/tours/tours.router');
-const userRouter = require('./routes/users/users.router');
+const AppError = require("./utils/appError");
+const { globalErrorHandler } = require("./controllers/error/error.controllers");
+const tourRouter = require("./routes/tours/tours.router");
+const userRouter = require("./routes/users/users.router");
 
-if(process.env.NODE_ENV === 'development'){
-    app.use(morgan('dev'));
-}else if(process.env.NODE_ENV === 'production'){
-    app.use(morgan('tiny'));
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
+} else if (process.env.NODE_ENV === "production") {
+  app.use(morgan("tiny"));
 }
 
 // application middlewares
@@ -19,18 +20,15 @@ app.use(express.static(`${__dirname}/public`));
 
 // application routes
 
-app.use('/api/v1/tours', tourRouter);
-app.use('/api/v1/users', userRouter);
-
+app.use("/api/v1/tours", tourRouter);
+app.use("/api/v1/users", userRouter);
 
 // if no route is found
-app.all('**', function(req, res) {
-    res.status(404).json({
-        status: 'fail',
-        message: `Can't find on this route: ${req.originalUrl}`
-    });
+app.all("*", function (req, res, next) {
+  next(new AppError(`Can't find this route: ${req.originalUrl}`, 404));
 });
 
+// Global Error Handling Middleware
+app.use(globalErrorHandler);
 
 module.exports = app;
-
