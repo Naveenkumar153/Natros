@@ -17,7 +17,6 @@ exports.getTours = catchAsync(async (req, res,next) => {
     .pagination();
 
     const tours = await features.query;
-    console.log('features',tours);
 
     res.status(200).json({
       status: 'success',
@@ -42,7 +41,6 @@ exports.createTour = catchAsync(async (req, res,next) => {
 exports.getTourById = catchAsync(async (req, res,next) => {
 
     const tours = await toursModel.findById(req.params.id);
-    console.log('tours',tours);
     if(!tours){
         next(new AppError('No tour found with that ID',404));
     }
@@ -130,7 +128,6 @@ exports.deleteTourById = catchAsync(async (req, res,next) => {
 exports.getMonthlyPlan = catchAsync(async (req, res,next) => {
 
     const year = +req.params.year;
-    console.log('year',year);
 
     const plan = await toursModel.aggregate([
       {
