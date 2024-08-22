@@ -6,6 +6,7 @@ const AppError = require("./utils/appError");
 const { globalErrorHandler } = require("./controllers/error/error.controllers");
 const tourRouter = require("./routes/tours/tours.router");
 const userRouter = require("./routes/users/users.router");
+const authRouter = require("./routes/auth/auth.router");
 
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
@@ -22,6 +23,7 @@ app.use(express.static(`${__dirname}/public`));
 
 app.use("/api/v1/tours", tourRouter);
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1",authRouter)
 
 // if no route is found
 app.all("*", function (req, res, next) {
