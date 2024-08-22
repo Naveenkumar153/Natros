@@ -4,6 +4,19 @@ const path = require('path');
 const envFileName = `.env.${process.env.NODE_ENV}`;
 const envFilePath = path.join(__dirname, '..', envFileName);
 
+
+process.on('unhandledRejection', (err) => {
+  console.log("Uncaught Rejection: ", err.name, err.message);
+  process.exit(1);
+});
+
+
+process.on('uncaughtException', (err) => {
+  console.log("Uncaught Exception: ", err.name, err.message);
+  process.exit(1);
+});
+
+
 dotenv.config({ path: envFilePath });
 
 const app = require('./app');
@@ -21,5 +34,4 @@ const connectDB = async () => {
   }
 };
 connectDB();
-
 
