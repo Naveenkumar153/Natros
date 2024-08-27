@@ -20,6 +20,6 @@ tourRouter.route('/monthly-plan/:year').get(tourController.getMonthlyPlan);
 tourRouter.route('/:id')
    .get(tourController.getTourById)
    .patch(tourController.updateTourById)
-   .delete(tourController.deleteTourById);
+   .delete(authController.restrictTo('admin', 'lead-guide'),tourController.deleteTourById);
 
 module.exports = tourRouter;
