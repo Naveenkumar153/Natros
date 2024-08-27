@@ -7,11 +7,16 @@ exports.signUp = catchAsync( async (req,res,next) => {
     const newUser = await User.create(req.body);
     const token = JWT.generateToken(newUser);
 
+    const userObj = newUser.toObject(); // conver mongoose object to javascript object
+    delete userObj.password; // delete the password field
+
+    const data = Object.assign(userObj,{token});
+
     res.status(201).json({
         status: 'success',
         token,
         data:{
-            user: newUser
+            user: data
         }
     })
 });
@@ -40,7 +45,42 @@ exports.signIn = catchAsync( async (req,res,next) => {
     const data = Object.assign(userObj,{token});
     res.status(200).json({
         status:'success',
-        data,
+        data:{
+            user: data
+        },
     });
 
-})
+});
+
+exports.protect = catchAsync(async function(req,res,next){
+    // Getting token and check of it's share
+    let token;
+    if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+        token = req.headers.authorization.split(' ')[1];
+    };
+    if(!token) {
+        return next(new AppError('You are not logged in! Please log in to get access', 401));
+    }
+    // Verification token
+
+    const decoded = JWT.verifyToken(token)
+    .then(async decoded => {
+        // Check if user still exists
+        const currentUser = await User.findById(decoded.id);
+        if(!currentUser) {
+            return next(new AppError('The user belonging to this token does no longer exist', 401));
+        };
+
+        // Check if user changed password after the token was issues
+        if(currentUser.changedPasswordAfter(decoded.iat)) {
+            return next(new AppError('User recently changed password! Please log in again.', 401));
+        };
+
+        // Grand access to protected route
+        req.user = currentUser;
+        next();
+    })
+    .catch(err => (
+        next(new AppError('Session expired', 401))
+    ));
+});
