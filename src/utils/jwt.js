@@ -6,6 +6,16 @@ class JWT {
             expiresIn: process.env.JWT_EXPIRES_IN,
             // algorithm: 'RS256' 
         });
+    };
+
+    static verifyToken(token){
+        return new Promise((resolve, reject) => {
+            jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+                if(err) return reject(err);
+                else if(!decoded) rejects('User is not verifyed');
+                resolve(decoded);
+            })
+        });
     }
 };
 
