@@ -3,7 +3,7 @@ const express = require('express');
 const tourRouter = express.Router();
 const tourController = require('../../controllers/tours/tours.controllers');
 const tourValidation = require('../../controllers/tours/tours.validation');
-
+const authController = require('../../controllers/auth/authController');
 /**
 + * Check if the parameter 'id' exists in the request parameters
 + * @param {id} id - The id of the tour
